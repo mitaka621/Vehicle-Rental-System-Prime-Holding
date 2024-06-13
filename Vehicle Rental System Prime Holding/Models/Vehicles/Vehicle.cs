@@ -172,10 +172,10 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 
             sb.AppendLine($"Rented Vehicle: {Brand} {Model}{Environment.NewLine}");
 			sb.AppendLine($"Reservation start date: {ReservationStartDate.ToString(Utilities.DateOnlyFormat)}");
-			sb.AppendLine($"Reservation end date: {ReservationEndDate}");
+			sb.AppendLine($"Reservation end date: {ReservationEndDate.ToString(Utilities.DateOnlyFormat)}");
 			sb.AppendLine($"Reserved rental days: {RentalPeriodInDays}{Environment.NewLine}");
-			sb.AppendLine($"Actual Return date: "+ ActualReturnDate==null?"--not yet returned--":ActualReturnDate?.ToString(Utilities.DateOnlyFormat));
-			sb.AppendLine($"Actual rental days: " + ActualRentalPeriod == null ? "--not yet returned--" : ActualRentalPeriod.ToString());
+			sb.AppendLine($"Actual Return date: "+ (ActualReturnDate==null?"--not yet returned--":ActualReturnDate?.ToString(Utilities.DateOnlyFormat)));
+			sb.AppendLine($"Actual rental days: " +( ActualRentalPeriod == null ? "--not yet returned--" : ActualRentalPeriod.ToString()));
             sb.AppendLine($"{Environment.NewLine}Rental cost per day: ${GetRentalCost():F2}");
             sb.AppendLine($"Initial insurance per day: ${GetInsuranceCost():F2}");
 
@@ -195,7 +195,7 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 
 			sb.AppendLine($"{Environment.NewLine}Total rent: ${totalRent:F2}");
 			sb.AppendLine($"Total Insurance: ${totalInsurance:F2}");
-            sb.AppendLine($"Total: {totalRent + totalInsurance}");
+            sb.AppendLine($"Total: ${totalRent + totalInsurance:F2}");
             sb.AppendLine("XXXXXXXXXXXXX");
 
             return sb.ToString().Trim();

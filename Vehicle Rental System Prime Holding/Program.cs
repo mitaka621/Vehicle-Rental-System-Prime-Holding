@@ -8,7 +8,7 @@ dealrship.AddVehicle("Car", "asdd", "ferary", "model 3", 1000000, 4);
 
 dealrship.RegisterClient("pesho", "petrov");
 
-dealrship.RentACar("asdd", 1, 10, DateOnly.FromDateTime(DateTime.Now));
+dealrship.RentACar("asdd", 1, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-4)));
 
-
+dealrship.ReturnVehicleAndPrintInvoice("asdd", 1);
 

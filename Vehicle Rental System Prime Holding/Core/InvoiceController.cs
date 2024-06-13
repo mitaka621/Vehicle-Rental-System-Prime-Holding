@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 using Vehicle_Rental_System_Prime_Holding.Core.Contracts;
 using Vehicle_Rental_System_Prime_Holding.Messages;
 using Vehicle_Rental_System_Prime_Holding.Models;
@@ -44,19 +45,20 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 					throw new ArgumentNullException(nameof(safetyRating));
 				}
 
-				vehicles.AddNew(new Car(vehicleLicensePlate, brand, model,vehicleValue, safetyRating.Value));
-
-				return;
+				vehicles.AddNew(new Car(vehicleLicensePlate, brand, model, vehicleValue, safetyRating.Value));
+			}
+			else
+			{
+				vehicles.AddNew((Activator.CreateInstance(vehicleType, vehicleLicensePlate, brand, model, vehicleValue) as Vehicle)!);
 			}
 
-			vehicles.AddNew((Activator.CreateInstance(vehicleType, vehicleLicensePlate, brand, model, vehicleValue) as Vehicle)!);
-
-			Console.WriteLine(string.Format(SuccessMessages.RegisteredVehicle, $"{brand} {client.LastName}", $"{car.Brand} {car.Model}"));
+			Console.WriteLine(string.Format(SuccessMessages.RegisteredVehicle, $"{brand} {model}", typeName));
 		}
 
 		public void RegisterClient(string firstName, string lastName, int? age=null, int? experience=null)
 		{
 			clients.AddNew(new Client(firstName, lastName, age, experience));
+			Console.WriteLine(string.Format(SuccessMessages.RegisteredClient, $"{firstName} {lastName}" ));
 		}
 
 		public void RentACar(string vehicleLicensePlate,int userId, int rentPeriod, DateOnly startDate)
@@ -80,11 +82,106 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 				throw new ArgumentException(ExceptionMessages.TheCarIsRented);
 			}
 
-			car.RentVehicle(rentPeriod, startDate, client.Age);
+			car.RentVehicle(rentPeriod, startDate);
 
 			client.AddCarToColection(car);
 
             Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}",$"{car.Brand} {car.Model}"));
         }
+
+		public void RentAVan(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate)
+		{
+			var client = clients.GetModelByIdentificator(userId.ToString());
+
+			if (client == null)
+			{
+				throw new ArgumentNullException(nameof(client));
+			}
+
+            if (client.Experience==null)
+            {
+				throw new ArgumentNullException(nameof(client.Experience));
+			}
+
+            var van = vehicles.GetModelByIdentificator(vehicleLicensePlate);
+
+			if (van == null || van.GetType().Name != nameof(CargoVan))
+			{
+				throw new ArgumentNullException(nameof(CargoVan));
+			}
+
+			if (van.IsRented)
+			{
+				throw new ArgumentException(ExceptionMessages.TheCarIsRented);
+			}
+
+			van.RentVehicle(rentPeriod, startDate, client.Experience);
+
+			client.AddCarToColection(van);
+
+			Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{van.Brand} {van.Model}"));
+		}
+
+		public void RentAMotorcycle(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate)
+		{
+			var client = clients.GetModelByIdentificator(userId.ToString());
+
+			if (client == null)
+			{
+				throw new ArgumentNullException(nameof(client));
+			}
+
+			if (client.Age == null)
+			{
+				throw new ArgumentNullException(nameof(client.Age));
+			}
+
+			var motorcycle = vehicles.GetModelByIdentificator(vehicleLicensePlate);
+
+			if (motorcycle == null || motorcycle.GetType().Name != nameof(Motorcycle))
+			{
+				throw new ArgumentNullException(nameof(Motorcycle));
+			}
+
+			if (motorcycle.IsRented)
+			{
+				throw new ArgumentException(ExceptionMessages.TheCarIsRented);
+			}
+
+			motorcycle.RentVehicle(rentPeriod, startDate, client.Age);
+
+			client.AddCarToColection(motorcycle);
+
+			Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{motorcycle.Brand} {motorcycle.Model}"));
+		}
+
+		public void ReturnVehicleAndPrintInvoice(string numberPlate, int clientId)
+		{
+			var client=clients.GetModelByIdentificator(clientId.ToString());
+
+            if (client==null)
+            {
+				throw new ArgumentNullException(nameof(client));
+			}
+
+			var rentedCar = client.Vehicles.FirstOrDefault(x => x.VehicleLicensePlate == numberPlate);
+
+			if (rentedCar == null) 
+			{
+				throw new ArgumentNullException(nameof(rentedCar));
+			}
+
+            if (rentedCar.ReturnVehicle())
+            {
+                StringBuilder sb=new StringBuilder();
+				sb.AppendLine("XXXXXXXXXXXXXX");
+				sb.AppendLine("Date: " + DateTime.Now.ToString(Utilities.DateOnlyFormat));
+				sb.AppendLine($"Customer Name: {client.FirstName} {client.LastName}");
+				sb.AppendLine(rentedCar.ToString());
+
+                Console.WriteLine(sb.ToString());
+            }
+           
+		}
 	}
 }

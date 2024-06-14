@@ -1,4 +1,5 @@
-﻿using Vehicle_Rental_System_Prime_Holding.Messages;
+﻿using System.Text;
+using Vehicle_Rental_System_Prime_Holding.Messages;
 using Vehicle_Rental_System_Prime_Holding.Models.Contracts;
 
 namespace Vehicle_Rental_System_Prime_Holding.Models
@@ -79,6 +80,31 @@ namespace Vehicle_Rental_System_Prime_Holding.Models
 		public void AddCarToColection(IVehicle model)
 		{
 			vehicles.Add(model);
+		}
+
+		public override string ToString()
+		{
+			StringBuilder sb=new StringBuilder();
+			if (vehicles.Count == 0)
+			{
+				sb.AppendLine("XXXXXXXXXXXXXX");
+				sb.AppendLine("Date: " + DateTime.Now.ToString(Utilities.DateOnlyFormat));
+				sb.AppendLine($"Customer Name: {FirstName} {LastName}");         
+				sb.AppendLine("--No Rented Cars--");
+				sb.AppendLine("XXXXXXXXXXXXXX");
+
+				return sb.ToString().Trim();
+			}
+            
+			foreach (var vehicle in vehicles)
+			{
+				sb.AppendLine("XXXXXXXXXXXXXX");
+				sb.AppendLine("Date: " + DateTime.Now.ToString(Utilities.DateOnlyFormat));
+				sb.AppendLine($"Customer Name: {FirstName} {LastName}");
+				sb.AppendLine(vehicle.ToString());
+			}
+			
+			return sb.ToString().TrimEnd();
 		}
 	}
 }

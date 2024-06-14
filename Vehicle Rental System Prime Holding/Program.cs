@@ -1,14 +1,18 @@
 ﻿using Vehicle_Rental_System_Prime_Holding.Core;
-using Vehicle_Rental_System_Prime_Holding.Models.Contracts;
-using Vehicle_Rental_System_Prime_Holding.Models.Vehicles;
+using Vehicle_Rental_System_Prime_Holding.Core.Contracts;
 
-InvoiceController dealrship=new InvoiceController();
+IInvoiceController dealership=new InvoiceController(false);
 
-dealrship.AddVehicle("CargoVan", "asdd", "ferary", "model 3", 10000);
+dealership.AddVehicle("Car","QWERTY","Mitsubishi","Mirage",15000,3);
+dealership.AddVehicle("Motorcycle", "YTREEWQ", "Triumph", "Tiger Sport 660", 10000);
 
-dealrship.RegisterClient("pesho", "petrov",experience: 10);
+dealership.RegisterClient("John", "Doe");
+dealership.RegisterClient("Mary", "Johnson",age: 20);
 
-dealrship.RentAVan("asdd", 1, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
+dealership.RentACar("QWERTY", 1, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
+dealership.RentAMotorcycle("YTREEWQ", 2, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
 
-dealrship.ReturnVehicleAndPrintInvoice("asdd", 1);
+dealership.ReturnVehicleAndPrintInvoice("QWERTY", 1);
+dealership.ReturnVehicleAndPrintInvoice("YTREEWQ", 2);
+
 

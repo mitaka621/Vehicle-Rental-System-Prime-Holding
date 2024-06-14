@@ -13,5 +13,7 @@
 		public const string InvalidClassTypeName = "The class type name you have entered has not been implemented- {0}";
 
 		public const string TheCarIsRented = "The car is already rented";
+
+		public const string TheLicensePlateAlreadyExists = "A vehicle with the license plate {0} already exists";
 	}
 }

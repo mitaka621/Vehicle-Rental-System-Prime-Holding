@@ -24,5 +24,7 @@ namespace Vehicle_Rental_System_Prime_Holding.Core.Contracts
 		void RentAMotorcycle(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate);
 
 		void ReturnVehicleAndPrintInvoice(string numberPlate, int clientId);
+
+		void PrintInvoicesForAllClients();
 	}
 }

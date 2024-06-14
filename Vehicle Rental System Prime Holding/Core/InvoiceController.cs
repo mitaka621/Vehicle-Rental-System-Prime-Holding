@@ -30,7 +30,12 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 			double vehicleValue,
 			int? safetyRating = null)
 		{
-			Assembly assembly = Assembly.GetExecutingAssembly();
+            if (vehicles.Models().Any(x=>x.VehicleLicensePlate== vehicleLicensePlate))
+            {
+				throw new ArgumentException(string.Format(ExceptionMessages.TheLicensePlateAlreadyExists, vehicleLicensePlate));
+            }
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
 
 			Type baseType = typeof(Vehicle);
 
@@ -207,5 +212,13 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
             }
            
 		}
+
+		public void PrintInvoicesForAllClients()
+		{
+            foreach (var client in clients.Models())
+            {
+				Console.WriteLine(client.ToString());
+			}
+        }
 	}
 }

@@ -127,7 +127,7 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 				case "Motorcycle":
 					return 10;
 				case "CargoVan":
-					return 30;
+					return 40;
 				default:
 					throw new NotImplementedException();
 			}

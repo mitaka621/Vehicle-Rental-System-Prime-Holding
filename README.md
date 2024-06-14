@@ -58,5 +58,180 @@
   <li><b>void ReturnVehicleAndPrintInvoice(string numberPlate, int clientId)</b> - Returns the vehicle by the given license plate and the userId. After that an invoice is printed on the CLI.</li>
   <li><b>void PrintInvoicesForAllClients()</b> - Prints Invoices for all clients registered to the dealership.</li>
 </ul>
+<p><ins>Note - all of the classes listed implement an appropriate interface</ins></p>
+<h1>Usage With Examples</h1>
+<h2>Provided Example</h2>
+<h3>Setup</h3>
+<pre>IInvoiceController dealership=new InvoiceController(false);
 
-<p><ins>Note - all of the classes listed implement an appropriate interface</ins>></p>
+dealership.AddVehicle("Car","QWERTY","Mitsubishi","Mirage",15000,3);
+dealership.AddVehicle("Motorcycle", "YTREEWQ", "Triumph", "Tiger Sport 660", 10000);
+
+dealership.RegisterClient("John", "Doe");
+dealership.RegisterClient("Mary", "Johnson",age: 20);
+
+dealership.RentACar("QWERTY", 1, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
+dealership.RentAMotorcycle("YTREEWQ", 2, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
+
+dealership.ReturnVehicleAndPrintInvoice("QWERTY", 1);
+dealership.ReturnVehicleAndPrintInvoice("YTREEWQ", 2);</pre>
+<h3>Output</h3>
+<pre>XXXXXXXXXXXXXX
+Date: 2024-06-14
+Customer Name: John Doe
+Rented Vehicle: Mitsubishi Mirage
+
+Reservation start date: 2024-06-04
+Reservation end date: 2024-06-14
+Reserved rental days: 10
+
+Actual Return date: 2024-06-14
+Actual rental days: 10
+
+Rental cost per day: $15.00
+Insurance per day: $1.50
+
+Total rent: $150.00
+Total Insurance: $15.00
+Total: $165.00
+XXXXXXXXXXXXX
+
+XXXXXXXXXXXXXX
+Date: 2024-06-14
+Customer Name: Mary Johnson
+Rented Vehicle: Triumph Tiger Sport 660
+
+Reservation start date: 2024-06-04
+Reservation end date: 2024-06-14
+Reserved rental days: 10
+
+Actual Return date: 2024-06-14
+Actual rental days: 10
+
+Rental cost per day: $10.00
+Initial insurance per day: $2.00
+Insurance addition per day: $0.40
+Insurance per day: $2.40
+
+Total rent: $100.00
+Total Insurance: $24.00
+Total: $124.00
+XXXXXXXXXXXXX</pre>
+<h2>Printing Invoices for All Clients</h2>
+<h3>Setup</h3>
+<p>If the client has not yet returned their vehicle the initial period is used for the calculations and for the null properties "--not yet returned--" is displayed.</p>
+<pre>IInvoiceController dealership=new InvoiceController();
+
+dealership.AddVehicle("Car", "QWERTY", "Mitsubishi", "Mirage", 15000, 3);
+dealership.AddVehicle("Motorcycle", "YTREEWQ", "Triumph", "Tiger Sport 660", 10000);
+
+dealership.RegisterClient("John", "Doe");
+dealership.RegisterClient("Mary", "Johnson", age: 20);
+dealership.RegisterClient("Gosho", "Petrov");
+
+dealership.RentACar("QWERTY", 1, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
+dealership.RentAMotorcycle("YTREEWQ", 2, 10, DateOnly.FromDateTime(DateTime.Now.AddDays(-10)));
+
+dealership.ReturnVehicleAndPrintInvoice("QWERTY", 1);
+
+dealership.PrintInvoicesForAllClients();</pre>
+<h3>Output</h3>
+<pre>
+<code>
+Mitsubishi Mirage is now registered of type Car
+Triumph Tiger Sport 660 is now registered of type Motorcycle
+John Doe is now registered
+Mary Johnson is now registered
+Gosho Petrov is now registered
+John Doe is renting Mitsubishi Mirage
+Mary Johnson is renting Triumph Tiger Sport 660
+XXXXXXXXXXXXXX
+Date: 2024-06-14
+Customer Name: John Doe
+Rented Vehicle: Mitsubishi Mirage
+
+Reservation start date: 2024-06-04
+Reservation end date: 2024-06-14
+Reserved rental days: 10
+
+Actual Return date: 2024-06-14
+Actual rental days: 10
+
+Rental cost per day: $15.00
+Insurance per day: $1.50
+
+Total rent: $150.00
+Total Insurance: $15.00
+Total: $165.00
+XXXXXXXXXXXXX
+
+------------------All Users Invoices----------------------
+XXXXXXXXXXXXXX
+Date: 2024-06-14
+Customer Name: John Doe
+Rented Vehicle: Mitsubishi Mirage
+
+Reservation start date: 2024-06-04
+Reservation end date: 2024-06-14
+Reserved rental days: 10
+
+Actual Return date: 2024-06-14
+Actual rental days: 10
+
+Rental cost per day: $15.00
+Insurance per day: $1.50
+
+Total rent: $150.00
+Total Insurance: $15.00
+Total: $165.00
+XXXXXXXXXXXXX
+------------------------------
+XXXXXXXXXXXXXX
+Date: 2024-06-14
+Customer Name: Mary Johnson
+Rented Vehicle: Triumph Tiger Sport 660
+
+Reservation start date: 2024-06-04
+Reservation end date: 2024-06-14
+Reserved rental days: 10
+
+Actual Return date: --not yet returned--
+Actual rental days: --not yet returned--
+
+Rental cost per day: $10.00
+Initial insurance per day: $2.00
+Insurance addition per day: $0.40
+Insurance per day: $2.40
+
+Total rent: $100.00
+Total Insurance: $24.00
+Total: $124.00
+XXXXXXXXXXXXX
+------------------------------
+XXXXXXXXXXXXXX
+Date: 2024-06-14
+Customer Name: Gosho Petrov
+--No Rented Cars--
+XXXXXXXXXXXXXX
+------------------------------
+</code>
+</pre>
+<h2>Handling Invalid Input</h2>
+<h3>Adding vehicle of type that does not exist</h3>
+<p>An exception will be thrown</p>
+<pre>System.ArgumentException: The class type name you have entered has not been implemented- asd</pre>
+<h2>Not providing a safety rating when adding a car.</h2>
+<p>An exception will be thrown</p>
+<pre>System.ArgumentNullException: Value cannot be null. (Parameter 'safetyRating')</pre>
+<h2>Renting a motorcycle or a cargovan to a client who does not have age or experience</h2>
+<p>An exception will be thrown</p>
+<pre>System.ArgumentNullException: Value cannot be null. (Parameter 'Age')</pre>
+<p>or</p>
+<pre>System.ArgumentNullException: Value cannot be null. (Parameter 'Experience')</pre>
+<h2>Adding a new vehicle with a license plate which already exists</h2>
+<p>An exception will be thrown</p>
+<pre> System.ArgumentException: A vehicle with the license plate QWERTY already exists</pre>
+<h2>Entering invalid values for name, age, experience etc...</h2>
+<p>An exception will be thrown</p>
+<pre>System.ArgumentException: The property Age cannot be negative (less than zero)</pre>
+<pre>System.ArgumentNullException: Value cannot be null. (Parameter 'The property FirstName cannot be null or empty')</pre>

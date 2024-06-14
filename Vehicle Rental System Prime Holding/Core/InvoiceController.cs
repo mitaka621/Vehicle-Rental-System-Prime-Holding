@@ -10,12 +10,19 @@ using Vehicle_Rental_System_Prime_Holding.Repositories.Contracts;
 
 namespace Vehicle_Rental_System_Prime_Holding.Core
 {
-	public class InvoiceController : IController
+	public class InvoiceController : IInvoiceController
 	{
-		IRepository<IVehicle> vehicles = new VehicleRepository();
-		IRepository<IClient> clients = new ClientsRepository();
+		private readonly IRepository<IVehicle> vehicles = new VehicleRepository();
+		private readonly IRepository<IClient> clients = new ClientsRepository();
 
-		public void AddVehicle(
+		private bool enableHelperMessages;
+
+		public InvoiceController(bool EnableHelperMessages=true)
+        {
+			enableHelperMessages= EnableHelperMessages;
+		}
+
+        public void AddVehicle(
 			string typeName,
 			string vehicleLicensePlate,
 			string brand,
@@ -52,13 +59,20 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 				vehicles.AddNew((Activator.CreateInstance(vehicleType, vehicleLicensePlate, brand, model, vehicleValue) as Vehicle)!);
 			}
 
-			Console.WriteLine(string.Format(SuccessMessages.RegisteredVehicle, $"{brand} {model}", typeName));
+            if (enableHelperMessages)
+            {
+				Console.WriteLine(string.Format(SuccessMessages.RegisteredVehicle, $"{brand} {model}", typeName));
+			}         
 		}
 
 		public void RegisterClient(string firstName, string lastName, int? age=null, int? experience=null)
 		{
 			clients.AddNew(new Client(firstName, lastName, age, experience));
-			Console.WriteLine(string.Format(SuccessMessages.RegisteredClient, $"{firstName} {lastName}" ));
+            if (enableHelperMessages)
+            {
+				Console.WriteLine(string.Format(SuccessMessages.RegisteredClient, $"{firstName} {lastName}"));
+			}
+           
 		}
 
 		public void RentACar(string vehicleLicensePlate,int userId, int rentPeriod, DateOnly startDate)
@@ -86,7 +100,10 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 
 			client.AddCarToColection(car);
 
-            Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}",$"{car.Brand} {car.Model}"));
+            if (enableHelperMessages)
+            {
+				Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{car.Brand} {car.Model}"));
+			}          
         }
 
 		public void RentAVan(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate)
@@ -119,7 +136,10 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 
 			client.AddCarToColection(van);
 
-			Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{van.Brand} {van.Model}"));
+            if (enableHelperMessages)
+            {
+				Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{van.Brand} {van.Model}"));
+			}        
 		}
 
 		public void RentAMotorcycle(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate)
@@ -152,7 +172,11 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 
 			client.AddCarToColection(motorcycle);
 
-			Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{motorcycle.Brand} {motorcycle.Model}"));
+            if (enableHelperMessages)
+            {
+				Console.WriteLine(string.Format(SuccessMessages.AddedCarToPerson, $"{client.FirstName} {client.LastName}", $"{motorcycle.Brand} {motorcycle.Model}"));
+			}
+           
 		}
 
 		public void ReturnVehicleAndPrintInvoice(string numberPlate, int clientId)

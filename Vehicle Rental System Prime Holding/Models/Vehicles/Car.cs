@@ -31,16 +31,16 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
             }
         }
 
-		public override double GetInsuranceCost()=> VehicleValue * 0.01;
+		public override double GetInsuranceCost()=> VehicleValue * (0.01 * 0.01);
 
 		public override double GetInsuranceCostChanges()
 		{
 			if (SafetyRating >= 4)
 			{
-				return GetInsuranceCost() - GetInsuranceCost() * 0.1;
+				return GetInsuranceCost() * 0.1 *-1;
 			}
 
-            return GetInsuranceCost();
+            return 0;
 		}
 	}
 }

@@ -9,11 +9,9 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 			string vehicleLicensePlate,
 			string brand,
 			string model,
-			double vehicleValue,
-			int driverExperience) 
+			double vehicleValue) 
 			: base(vehicleLicensePlate, brand, model, vehicleValue)
         {
-			DriverExperience = driverExperience;
 		}
 
 		private int driverExperience;
@@ -42,16 +40,16 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 			return base.RentVehicle(rentalPeriodInDays, reservationStartDate, optParam);
 		}
 
-		public override double GetInsuranceCost() => VehicleValue * 0.03;
+		public override double GetInsuranceCost() => VehicleValue * (0.03 * 0.01);
 
 		public override double GetInsuranceCostChanges()
 		{
 			if (DriverExperience > 5)
 			{
-				return GetInsuranceCost() - GetInsuranceCost() * 0.15;
+				return GetInsuranceCost() * 0.15 * -1;
 			}
 
-			return GetInsuranceCost();
+			return 0;
 		}
 	}
 }

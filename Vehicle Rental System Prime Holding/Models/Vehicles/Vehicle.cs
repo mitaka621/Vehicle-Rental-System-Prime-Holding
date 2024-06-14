@@ -148,6 +148,7 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 
             RentalPeriodInDays = rentalPeriodInDays;
             ReservationStartDate= reservationStartDate;
+			ActualReturnDate = null;
 
 			return true;
 		}
@@ -177,21 +178,30 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
 			sb.AppendLine($"Actual Return date: "+ (ActualReturnDate==null?"--not yet returned--":ActualReturnDate?.ToString(Utilities.DateOnlyFormat)));
 			sb.AppendLine($"Actual rental days: " +( ActualRentalPeriod == null ? "--not yet returned--" : ActualRentalPeriod.ToString()));
             sb.AppendLine($"{Environment.NewLine}Rental cost per day: ${GetRentalCost():F2}");
-            sb.AppendLine($"Initial insurance per day: ${GetInsuranceCost():F2}");
+
+            double additionalCost = 0;
+
+            if (ActualRentalPeriod<RentalPeriodInDays)
+            {
+                additionalCost = GetRentalCost() / 2 * (RentalPeriodInDays- ActualRentalPeriod.Value);
+				sb.AppendLine($"Additional cost for the remaining days at half price: ${additionalCost:F2}");
+			}         
 
             if (GetInsuranceCostChanges()<0)
             {
-				sb.AppendLine($"Insurance subtraction per day: ${GetInsuranceCost():F2}");
+				sb.AppendLine($"Initial insurance per day: ${GetInsuranceCost():F2}");
+				sb.AppendLine($"Insurance subtraction per day: ${GetInsuranceCostChanges():F2}");
 			}
             else if(GetInsuranceCostChanges() > 0)
             {
-				sb.AppendLine($"Insurance addition per day: ${GetInsuranceCost():F2}");
+				sb.AppendLine($"Initial insurance per day: ${GetInsuranceCost():F2}");
+				sb.AppendLine($"Insurance addition per day: ${GetInsuranceCostChanges():F2}");
 			}
 
 			sb.AppendLine($"Insurance per day: ${GetInsuranceCost()+GetInsuranceCostChanges():F2}");
 
-            double totalRent = GetRentalCost() * ActualRentalPeriod ?? RentalPeriodInDays;
-            double totalInsurance = (GetInsuranceCost() + GetInsuranceCostChanges()) * ActualRentalPeriod ?? RentalPeriodInDays;
+            double totalRent = GetRentalCost() * (ActualRentalPeriod ?? RentalPeriodInDays) + additionalCost;
+            double totalInsurance = (GetInsuranceCost() + GetInsuranceCostChanges()) * (ActualRentalPeriod ?? RentalPeriodInDays);
 
 			sb.AppendLine($"{Environment.NewLine}Total rent: ${totalRent:F2}");
 			sb.AppendLine($"Total Insurance: ${totalInsurance:F2}");

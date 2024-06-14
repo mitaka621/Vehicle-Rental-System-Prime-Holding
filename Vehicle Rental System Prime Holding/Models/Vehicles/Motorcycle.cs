@@ -47,16 +47,16 @@ namespace Vehicle_Rental_System_Prime_Holding.Models.Vehicles
             return base.RentVehicle(rentalPeriodInDays, reservationStartDate, optParam);
 		}
 
-		public override double GetInsuranceCost()=> VehicleValue * 0.02;
+		public override double GetInsuranceCost()=> VehicleValue * (0.02 * 0.01);
 
 		public override double GetInsuranceCostChanges()
 		{
 			if (Age < 25)
 			{
-				return GetInsuranceCost() + GetInsuranceCost() * 0.2;
+				return GetInsuranceCost() * 0.2;
 			}
 
-			return GetInsuranceCost();
+			return 0;
 		}
 	}
 }

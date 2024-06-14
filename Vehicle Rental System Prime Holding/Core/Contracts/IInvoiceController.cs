@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vehicle_Rental_System_Prime_Holding.Core.Contracts
 {
-	public interface IController
+	public interface IInvoiceController
 	{
 		void RegisterClient(string FirstName, string LastName, int? age = null, int? experience=null);
 
@@ -16,5 +16,13 @@ namespace Vehicle_Rental_System_Prime_Holding.Core.Contracts
 			string model,
 			double vehicleValue,
 			int? safetyRating = null);
+
+		void RentACar(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate);
+
+		void RentAVan(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate);
+
+		void RentAMotorcycle(string vehicleLicensePlate, int userId, int rentPeriod, DateOnly startDate);
+
+		void ReturnVehicleAndPrintInvoice(string numberPlate, int clientId);
 	}
 }

@@ -101,7 +101,7 @@ namespace Vehicle_Rental_System_Prime_Holding.Models
 				sb.AppendLine("XXXXXXXXXXXXXX");
 				sb.AppendLine("Date: " + DateTime.Now.ToString(Utilities.DateOnlyFormat));
 				sb.AppendLine($"Customer Name: {FirstName} {LastName}");
-				sb.AppendLine(vehicle.ToString());
+				sb.AppendLine(vehicle.ToString()+Environment.NewLine);
 			}
 			
 			return sb.ToString().TrimEnd();

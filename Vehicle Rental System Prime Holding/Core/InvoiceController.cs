@@ -215,10 +215,12 @@ namespace Vehicle_Rental_System_Prime_Holding.Core
 
 		public void PrintInvoicesForAllClients()
 		{
+            Console.WriteLine("------------------All Users Invoices----------------------");
             foreach (var client in clients.Models())
             {
 				Console.WriteLine(client.ToString());
-			}
+                Console.WriteLine("------------------------------");
+            }
         }
 	}
 }
